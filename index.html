@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نموذج تسجيل المرضى والجرحى</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #007BFF, #00C851);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 450px;
+            margin: auto;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #ffeb3b;
+        }
+        label {
+            display: block;
+            text-align: right;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+            display: block;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border: 2px solid #ffeb3b;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #ffeb3b;
+            color: black;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #fdd835;
+            transform: scale(1.05);
+        }
+        #message {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffeb3b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>📝 تسجيل بيانات المرضى والجرحى</h2>
+        <form id="patientForm">
+            <label for="fullName">اسم المريض</label>
+            <input type="text" id="fullName" required>
+
+            <label for="idNumber">رقم الهوية</label>
+            <input type="text" id="idNumber" required>
+
+            <label for="birthDate">تاريخ الميلاد</label>
+            <input type="date" id="birthDate" required>
+
+            <label for="diagnosis">التشخيص</label>
+            <input type="text" id="diagnosis" required>
+
+            <label for="companionName">اسم المرافق</label>
+            <input type="text" id="companionName" required>
+
+            <label for="companionId">تاريخ هوية المرافق</label>
+            <input type="text" id="companionId" required>
+
+            <label for="relationship">صلة القرابة</label>
+            <select id="relationship" required>
+                <option value="">اختر صلة القرابة</option>
+                <option value="أب">أب</option>
+                <option value="أم">أم</option>
+                <option value="أخ">أخ</option>
+                <option value="أخت">أخت</option>
+                <option value="زوج">زوج</option>
+                <option value="زوجة">زوجة</option>
+                <option value="ابن">ابن</option>
+                <option value="ابنة">ابنة</option>
+                <option value="قريب آخر">قريب آخر</option>
+            </select>
+
+            <label for="phoneNumber">رقم الهاتف</label>
+            <input type="text" id="phoneNumber" required>
+
+            <label for="treatmentCountry">البلد المعالج</label>
+            <input type="text" id="treatmentCountry" required>
+
+            <button type="submit">📤 إرسال البيانات</button>
+        </form>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        document.getElementById('patientForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            var fullName = document.getElementById('fullName').value;
+            var idNumber = document.getElementById('idNumber').value;
+            var birthDate = document.getElementById('birthDate').value;
+            var diagnosis = document.getElementById('diagnosis').value;
+            var companionName = document.getElementById('companionName').value;
+            var companionId = document.getElementById('companionId').value;
+            var relationship = document.getElementById('relationship').value;
+            var phoneNumber = document.getElementById('phoneNumber').value;
+            var treatmentCountry = document.getElementById('treatmentCountry').value;
+
+            var scriptURL = "https://script.google.com/macros/s/XXXXXXXXXXXXXXX/exec"; // ضع رابط Google Apps Script هنا
+
+            fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify({
+                    fullName: fullName,
+                    idNumber: idNumber,
+                    birthDate: birthDate,
+                    diagnosis: diagnosis,
+                    companionName: companionName,
+                    companionId: companionId,
+                    relationship: relationship,
+                    phoneNumber: phoneNumber,
+                    treatmentCountry: treatmentCountry
+                }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('message').innerText = "✅ تم تسجيل البيانات بنجاح!";
+                document.getElementById('patientForm').reset(); // مسح الحقول بعد الإرسال
+            })
+            .catch(error => {
+                document.getElementById('message').innerText = "❌ حدث خطأ! حاول مرة أخرى.";
+                console.error('خطأ:', error);
+            });
+        });
+    </script>
+
+</body>
+</html>
